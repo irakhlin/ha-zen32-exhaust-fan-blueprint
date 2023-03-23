@@ -35,35 +35,35 @@ blueprint:
     top_left_time:
       name: Top Left Timer
       description: Time value for top left button
-        selector:
-          duration:
-            enable_day: false 
+      selector:
+        duration:
+          enable_day: false
     top_right_time:
       name: Top Right Timer
       description: Time value for top right button
-        selector:
-          duration:
-            enable_day: false 
+      selector:
+        duration:
+          enable_day: false
     bottom_left_time:
       name: Bottom Left Timer
       description: Time value for bottom left button
-        selector:
-          duration:
-            enable_day: false 
+      selector:
+        duration:
+          enable_day: false
     bottom_right_time:
       name: Bottom Right Timer
       description: Time value for bottom right button
-        selector:
-          duration:
-            enable_day: false
+      selector:
+        duration:
+          enable_day: false
 
     previous_time_variable:
       name: Previous Time Variable
       description: Input text to store previous run time
-        selector:
-          entity:
-            domain: input_text
-            multiple: false
+      selector:
+        entity:
+          domain: input_text
+          multiple: false
 #
 # Variables
 #
