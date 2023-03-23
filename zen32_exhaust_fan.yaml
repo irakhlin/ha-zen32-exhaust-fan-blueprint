@@ -89,7 +89,7 @@ trigger:
       device_id: !input scene_controller
       property: scene
       property_key: "001"
-    id: zwave_scene_top_right
+    id: zwave_scene_top_left
   - platform: event # Top-right Small Button
     event_type: zwave_js_value_notification
     event_data:
@@ -743,7 +743,7 @@ action:
         sequence:
           - service: input_text.set_value
             data:
-              value: '{{ states(previous_time_variable) }}'
+              value: '{{ bottom_right_time }}'
             target:
               entity_id: !input previous_time_variable
           - service: timer.start
@@ -757,7 +757,7 @@ action:
         sequence:
           - service: input_text.set_value
             data:
-              value: '{{ states(previous_time_variable) }}'
+              value: '{{ bottom_left_time }}'
             target:
               entity_id: !input previous_time_variable
           - service: timer.start
@@ -771,7 +771,7 @@ action:
         sequence:
           - service: input_text.set_value
             data:
-              value: '{{ states(previous_time_variable) }}'
+              value: '{{ top_right_time }}'
             target:
               entity_id: !input previous_time_variable
           - service: timer.start
@@ -785,7 +785,7 @@ action:
         sequence:
           - service: input_text.set_value
             data:
-              value: '{{ states(previous_time_variable) }}'
+              value: '{{ top_left_time }}'
             target:
               entity_id: !input previous_time_variable
           - service: timer.start
