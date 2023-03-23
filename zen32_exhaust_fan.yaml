@@ -32,7 +32,38 @@ blueprint:
         entity:
           domain: timer
           multiple: false
+    top_left_time:
+      name: Top Left Timer
+      description: Time value for top left button
+        selector:
+          duration:
+            enable_day: false 
+    top_right_time:
+      name: Top Right Timer
+      description: Time value for top right button
+        selector:
+          duration:
+            enable_day: false 
+    bottom_left_time:
+      name: Bottom Left Timer
+      description: Time value for bottom left button
+        selector:
+          duration:
+            enable_day: false 
+    bottom_right_time:
+      name: Bottom Right Timer
+      description: Time value for bottom right button
+        selector:
+          duration:
+            enable_day: false
 
+    previous_time_variable:
+      name: Previous Time Variable
+      description: Input text to store previous run time
+        selector:
+          entity:
+            domain: input_text
+            multiple: false
 #
 # Variables
 #
@@ -40,7 +71,11 @@ variables:
   fan_switch: !input fan_switch
   fan_timer: !input fan_timer
   scene_controller: !input scene_controller
-
+  top_left_time: !input top_left_time
+  top_right_time: !input top_right_time
+  bottom_left_time: !input bottom_left_time
+  bottom_right_time: !input bottom_right_time
+  previous_time_variable: !input previous_time_variable
 #
 # Triggers
 #
@@ -54,35 +89,35 @@ trigger:
       device_id: !input scene_controller
       property: scene
       property_key: "001"
-    id: zwave_scene_10m
+    id: zwave_scene_top_right
   - platform: event # Top-right Small Button
     event_type: zwave_js_value_notification
     event_data:
       device_id: !input scene_controller
       property: scene
       property_key: "002"
-    id: zwave_scene_20m
+    id: zwave_scene_top_right
   - platform: event # Bottom-left Small Button
     event_type: zwave_js_value_notification
     event_data:
       device_id: !input scene_controller
       property: scene
       property_key: "003"
-    id: zwave_scene_30m
+    id: zwave_scene_bottom_left
   - platform: event # Bottom-right Small Button
     event_type: zwave_js_value_notification
     event_data:
       device_id: !input scene_controller
       property: scene
       property_key: "004"
-    id: zwave_scene_45m
+    id: zwave_scene_bottom_right
   - platform: event # Big Button
     event_type: zwave_js_value_notification
     event_data:
       device_id: !input scene_controller
       property: scene
       property_key: "005"
-    id: zwave_scene_60m
+    id: zwave_scene_big_button
 
   #
   # Timer Triggers
@@ -688,7 +723,7 @@ action:
 
       - conditions: # 60m Button Pressed
           - condition: trigger
-            id: zwave_scene_60m
+            id: zwave_scene_big_button
         sequence:
           - if:
               - condition: device
@@ -699,43 +734,63 @@ action:
             then:
               service: timer.start
               data:
-                duration: "1:00:00"
+                duration: '{{ states(previous_time_variable) }}'
               target:
                 entity_id: !input fan_timer
       - conditions: # 45m Button Pressed
           - condition: trigger
-            id: zwave_scene_45m
+            id: zwave_scene_bottom_right
         sequence:
+          - service: input_text.set_value
+            data:
+              value: '{{ states(previous_time_variable) }}'
+            target:
+              entity_id: !input previous_time_variable
           - service: timer.start
             data:
-              duration: 0:45:00
+              duration: '{{ bottom_right_time }}'
             target:
               entity_id: !input fan_timer
       - conditions: # 30m Button Pressed
           - condition: trigger
-            id: zwave_scene_30m
+            id: zwave_scene_bottom_left
         sequence:
+          - service: input_text.set_value
+            data:
+              value: '{{ states(previous_time_variable) }}'
+            target:
+              entity_id: !input previous_time_variable
           - service: timer.start
             data:
-              duration: 0:30:00
+              duration: '{{ bottom_left_time }}'
             target:
               entity_id: !input fan_timer
       - conditions: # 20m Button Pressed
           - condition: trigger
-            id: zwave_scene_20m
+            id: zwave_scene_top_right
         sequence:
+          - service: input_text.set_value
+            data:
+              value: '{{ states(previous_time_variable) }}'
+            target:
+              entity_id: !input previous_time_variable
           - service: timer.start
             data:
-              duration: 0:20:00
+              duration: '{{ top_right_time }}'
             target:
               entity_id: !input fan_timer
       - conditions: # 10m Button Pressed
           - condition: trigger
-            id: zwave_scene_10m
+            id: zwave_scene_top_left
         sequence:
+          - service: input_text.set_value
+            data:
+              value: '{{ states(previous_time_variable) }}'
+            target:
+              entity_id: !input previous_time_variable
           - service: timer.start
             data:
-              duration: 0:10:00
+              duration: '{{ top_left_time }}'
             target:
               entity_id: !input fan_timer
 
